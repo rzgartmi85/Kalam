@@ -40,16 +40,33 @@ jobs:
       - name: Create Capacitor Android project
         run: |
           npm init -y
-          npm i @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6
+          npm i @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6 @capacitor/splash-screen@6
           npm i -D @capacitor/assets@3
-          npx cap init Kalam com.yahakeem.kalam --web-dir=www
+          cat > capacitor.config.json <<'JSON'
+          {
+            "appId": "com.yahakeem.kalam",
+            "appName": "Kalam",
+            "webDir": "www",
+            "backgroundColor": "#12302f",
+            "plugins": {
+              "SplashScreen": {
+                "launchShowDuration": 500,
+                "launchAutoHide": true,
+                "launchFadeOutDuration": 300,
+                "backgroundColor": "#12302f",
+                "showSpinner": false,
+                "androidScaleType": "CENTER_CROP"
+              }
+            }
+          }
+          JSON
           npx cap add android
 
       - name: Generate icon and splash screen
         run: |
           npx capacitor-assets generate --android \
             --iconBackgroundColor '#12302f' --iconBackgroundColorDark '#12302f' \
-            --splashBackgroundColor '#eef2f0' --splashBackgroundColorDark '#0f1b1b'
+            --splashBackgroundColor '#12302f' --splashBackgroundColorDark '#12302f'
           npx cap sync android
 
       - name: Point Gradle at the SDK
